@@ -1,8 +1,5 @@
 function solvechimera(N,A,k)
-%坐标系的设置
-axis([0 N -1.1 1.1])
-titl = title('chimera');
-box on
+
 
 G = couplecore(A,k);
 %%参数设置
@@ -24,16 +21,24 @@ function status = outputfcn(t,theta,odeflag)
     % Called after each successful step of the ode solver.
     if isempty(odeflag)  % Not 'init' or 'last'.
         for j = 1:length(t)
+            %坐标系的设置
+            axis([0,N,-pi,pi])
+            hold on
+            title(['time (' sprintf('%6.3f',t(j)) ')'])
+            hold on
             if loop == 0
                 break
             end
-            plot(1:N,asin(sin(theta(:,j)))/pi,'r.')
+            %%%%描点
+            plot(1:N,asin(sin(theta(:,j))),'r.');
             if t(j) >= quit
                     loop = 0;
                     stop = 1;
             end
+            grid on
+            drawnow 
+            clf
         end
-        drawnow limitrate
     end
     status = flag + stop;
 end
