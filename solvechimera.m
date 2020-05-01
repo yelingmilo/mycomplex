@@ -4,7 +4,7 @@ function solvechimera(N,A,k)
 G = couplecore(A,k);
 %%参数设置
 rng(1,'twister');
-theta = rand(N,1);
+theta = 2*pi*rand(N,1)-pi;
 t=0;
 loop=1;
 quit=4000;
@@ -36,7 +36,7 @@ function status = outputfcn(t,theta,odeflag)
                     stop = 1;
             end
             grid on
-            drawnow 
+            drawnow %%刷新图形
             clf
         end
     end
@@ -64,14 +64,9 @@ function [G] = couplecore(A,k)
 %%a为邻接矩阵，A为全局耦合强度，k为局部耦合强度。
 a=cER(N,4/N);%%%这里设置连接概率p为4/N
 a(a==0)=inf;
-a=a-diag(diag(a));
+a=a-diag(diag(a));%%%对角元素取0.
 n=size(a);
-G=zeros(n);
 a=sparse(a);
-for i=1:n(1)
-    for j=1:n(2)
-        G(i,j)=A*exp(-k*graphshortestpath(a,i,j));
-    end
-end 
+G=A*exp(-k*graphallshortestpaths(a));
 end
 end
